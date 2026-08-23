@@ -4,6 +4,17 @@ Public Class ChannelsGrid
     Public Sub New()
         InitializeComponent()
         AddHandler Me.Loaded, AddressOf ChannelsGrid_Loaded
+        AddHandler BtnHome.Click, AddressOf BtnHome_Click
+    End Sub
+
+    Private Sub BtnHome_Click(sender As Object, e As RoutedEventArgs)
+        Try
+            Dim splash = New SplashWindow()
+            CloseDuplicateWindows(splash)
+            splash.Show()
+        Catch
+        End Try
+        Me.Close()
     End Sub
 
     Private Sub ChannelsGrid_Loaded(sender As Object, e As RoutedEventArgs)

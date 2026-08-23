@@ -39,8 +39,19 @@ Public Class ChannelEditor
         AddHandler BtnSaveChannels.Click, AddressOf BtnSaveChannels_Click
         AddHandler BtnCloseEditor.Click, AddressOf BtnCloseEditor_Click
         AddHandler LstEditorChannels.SelectionChanged, AddressOf LstEditorChannels_SelectionChanged
+        AddHandler BtnHome.Click, AddressOf BtnHome_Click
 
         LoadExisting()
+    End Sub
+
+    Private Sub BtnHome_Click(sender As Object, e As RoutedEventArgs)
+        Try
+            Dim splash = New SplashWindow()
+            CloseDuplicateWindows(splash)
+            splash.Show()
+        Catch
+        End Try
+        Me.Close()
     End Sub
 
     ' Drag-drop reordering for LstFiles

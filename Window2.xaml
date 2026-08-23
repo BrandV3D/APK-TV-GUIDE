@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TVMoviesChannelGuide"
         mc:Ignorable="d"
-        Title="Window2" Height="450" Width="800">
+        Title="Window2" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
         <Rectangle HorizontalAlignment="Left" Height="403" Margin="24,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="736" Fill="Black"/>
 

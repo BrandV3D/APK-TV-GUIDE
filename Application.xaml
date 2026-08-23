@@ -2,8 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TVMoviesChannelGuide"
-             StartupUri="SplashWindow.xaml">
+             StartupUri="IconSplashWindow.xaml">
     <Application.Resources>
-         
+        <!-- Solid light-blue "on air now" highlight bar, reused across every guide/
+             timeline screen, paired with a dark foreground so text stays readable
+             on top of it. -->
+        <SolidColorBrush x:Key="NowPlayingBrush" Color="#FF5DA9FF" />
+        <SolidColorBrush x:Key="NowPlayingForeground" Color="#FF001B2F" />
     </Application.Resources>
 </Application>

@@ -1,0 +1,192 @@
+<Window x:Class="LiveTV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TVMoviesChannelGuide"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        mc:Ignorable="d"
+        Title="Live TV" Height="720" Width="1280" WindowState="Maximized" Background="#FF001233">
+    <Grid Background="#FF001233">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header bar: logo/clock, LIVE TV title, Exit -->
+        <Grid Grid.Row="0" Background="#FF001B2F" Height="56">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Image x:Name="Place_for_Logo_of_App" Width="38" Height="38" Margin="20,0,20,0"
+                   Source="/TVMovieChannelGUIDE_Icon.png" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,20,0">
+                <TextBlock x:Name="Current_Time_with_Am_or_PM" Text="--:--:-- --" FontSize="16" FontWeight="Bold" Foreground="White" FontFamily="Consolas" />
+                <TextBlock x:Name="Curent_Date" Text="---" FontSize="12" Foreground="#FF8FE0FF" FontFamily="Consolas" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border x:Name="Pro" Background="#FFD32F2F" CornerRadius="3" Padding="8,3" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <TextBlock Text="● LIVE" Foreground="White" FontWeight="Bold" FontSize="13" FontFamily="Consolas" />
+                </Border>
+                <TextBlock x:Name="LIVE_TV" Text="LIVE TV" FontSize="30" FontWeight="Bold" Foreground="#FFFFD700" FontFamily="Consolas" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <Button x:Name="BtnCloseGuide" Grid.Column="3" Content="Exit" Margin="10" Padding="14,6"
+                    Background="#FF223344" Foreground="White" FontWeight="Bold" BorderBrush="#FFFFD700" />
+        </Grid>
+
+        <!-- Body: sidebar + main area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left sidebar: Menu + Channel Categories -->
+            <Grid Grid.Column="0" Background="#FF03263C">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel x:Name="Menu" Grid.Row="0" Margin="8">
+                    <TextBlock Text="MENU" Foreground="#FFFFD700" FontWeight="Bold" FontSize="13" Margin="4,4,4,6" />
+                    <Button x:Name="BtnMenuHome" Content="Home" Margin="0,0,0,4" Padding="6,6" Background="#FF223344" Foreground="White" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                    <Button x:Name="BtnMenuTvGuide" Content="TV Guide" Margin="0,0,0,4" Padding="6,6" Background="#FF223344" Foreground="White" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                    <Button x:Name="BtnMenuProgramming" Content="Programming" Margin="0,0,0,4" Padding="6,6" Background="#FF223344" Foreground="White" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                    <Button x:Name="BtnMenuLiveTv" Content="Live TV" Margin="0,0,0,4" Padding="6,6" Background="#FF5DA9FF" Foreground="#FF001B2F" FontWeight="Bold" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" IsEnabled="False" />
+                    <Button x:Name="BtnMenuEditChannels" Content="Edit Channels" Margin="0,0,0,4" Padding="6,6" Background="#FF223344" Foreground="White" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                </StackPanel>
+
+                <StackPanel x:Name="Channel_Categories" Grid.Row="1" Margin="8">
+                    <TextBlock Text="CHANNEL CATEGORIES" Foreground="#FFFFD700" FontWeight="Bold" FontSize="13" Margin="4,4,4,6" TextWrapping="Wrap" />
+                    <Button x:Name="BtnCategoryAll" Content="All Channels" Margin="0,0,0,4" Padding="6,6" Background="#FF5DA9FF" Foreground="#FF001B2F" FontWeight="Bold" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                    <Button x:Name="BtnCategoryMovies" Content="Movies" Margin="0,0,0,4" Padding="6,6" Background="#FF223344" Foreground="White" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                    <Button x:Name="BtnCategoryShows" Content="Shows" Margin="0,0,0,4" Padding="6,6" Background="#FF223344" Foreground="White" BorderBrush="#FF0B2B45" HorizontalContentAlignment="Left" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Main area: info strip + guide grid -->
+            <Grid Grid.Column="1" Background="#FF0A367D">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="450" />
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Info strip: live preview / now+program / coming up today -->
+                <Grid Grid.Row="0" Margin="10,10,10,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="660" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0" Margin="0,0,8,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border x:Name="Player" Grid.Row="0" BorderBrush="#FFFFD700" BorderThickness="3" CornerRadius="4">
+                            <vlc:VideoView x:Name="PreviewVideo" Background="Black" />
+                        </Border>
+
+                        <StackPanel Grid.Row="1" Margin="0,6,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="TimeCurrentLabel" Grid.Column="0" Text="0:00" Foreground="White" FontSize="11" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <Slider x:Name="ScrubSlider" Grid.Column="1" Minimum="0" Maximum="1000" Value="0" VerticalAlignment="Center"
+                                        PreviewMouseDown="ScrubSlider_PreviewMouseDown" PreviewMouseUp="ScrubSlider_PreviewMouseUp" ValueChanged="ScrubSlider_ValueChanged" />
+                                <TextBlock x:Name="TimeTotalLabel" Grid.Column="2" Text="0:00" Foreground="White" FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0" />
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,4,0,0">
+                                <Button x:Name="BtnPlay" Content="Play" Padding="8,4" Margin="0,0,4,0" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                                <Button x:Name="BtnPause" Content="Pause" Padding="8,4" Margin="0,0,4,0" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                                <Button x:Name="BtnStop" Content="Stop" Padding="8,4" Margin="0,0,4,0" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                                <Button x:Name="BtnMute" Content="Mute" Padding="8,4" Margin="0,0,4,0" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                                <Button x:Name="BtnSubtitles" Content="CC: Off" Padding="8,4" Margin="0,0,4,0" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                                <Button x:Name="BtnPlayInPlayer" Content="Play in Player" Padding="8,4" Margin="0,0,4,0" Background="#FF223344" Foreground="White" FontWeight="Bold" BorderBrush="#FFFFD700" />
+                                <TextBlock Text="Vol" Foreground="White" FontSize="11" VerticalAlignment="Center" Margin="8,0,4,0" />
+                                <Slider x:Name="VolumeSlider" Width="90" Minimum="0" Maximum="100" Value="70" VerticalAlignment="Center" ValueChanged="VolumeSlider_ValueChanged" />
+                                <TextBlock x:Name="VolumeLabel" Text="70%" Foreground="White" FontSize="11" VerticalAlignment="Center" Width="32" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel x:Name="Channel_name_and_the_word_PROGRAM_and_Coming_up_Today" Grid.Column="1" Margin="0,0,8,0">
+                        <TextBlock x:Name="SelectedChannelNameText" Text="Channel 1" Foreground="#FFFFD700" FontWeight="Bold" FontSize="18" FontFamily="Consolas" TextWrapping="Wrap" />
+                        <TextBlock Text="PROGRAM" Foreground="#FF8FE0FF" FontSize="12" FontWeight="Bold" Margin="0,10,0,2" />
+                        <TextBlock x:Name="SelectedProgramTitleText" Text="(loading)" Foreground="White" FontSize="14" TextWrapping="Wrap" />
+                        <TextBlock Text="COMING UP TODAY" Foreground="#FF8FE0FF" FontSize="12" FontWeight="Bold" Margin="0,14,0,0" />
+                    </StackPanel>
+
+                    <Border x:Name="Color1" Grid.Column="2" Background="#FF03263C" BorderBrush="#FF0B2B45" BorderThickness="1">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel x:Name="ComingUpTodayPanel" Margin="6" />
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
+                <!-- Toolbar row: CHANNELS label / Now / Full Screen / date -->
+                <Grid Grid.Row="1" Margin="10,0,10,0" Opacity="0.3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="140" />
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="CHANNELS_TEXT" Grid.Column="0" Grid.ColumnSpan="2" Margin="1,0,632,0">
+                        <TextBlock Text="CHANNEL" Foreground="White" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <Button x:Name="Time_Text" Grid.Column="2" Content="◀ Now" Margin="4,0" Padding="8,4" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                    <Button x:Name="Edit" Grid.Column="3" Content="Full Screen" Margin="4,0" Padding="8,4" Background="#FF223344" Foreground="White" BorderBrush="#FFFFD700" />
+                    <Border x:Name="Color2" Grid.Column="4" Background="#FF014F98">
+                        <TextBlock x:Name="Day_of_the_Week_and_Date" Text="---" Foreground="White" FontWeight="Bold" FontFamily="Consolas" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+
+                <!-- The guide grid itself: fixed channel column + horizontally-scrollable time
+                     grid, both wrapped in one vertical ScrollViewer so the channel list and the
+                     time grid always scroll up/down together. -->
+                <Grid Grid.Row="1" Margin="0,30,0,0" Grid.RowSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="58*"/>
+                        <ColumnDefinition Width="77*"/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer x:Name="ChannelListScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,0" Grid.ColumnSpan="2" PreviewMouseWheel="ChannelListScrollViewer_PreviewMouseWheel">
+                        <Grid x:Name="GuideContentGrid" Height="294">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Background="#FF001B4D" BorderBrush="#FF0B2B45" BorderThickness="1,1,0,1" Margin="0,0,866,-1" Grid.ColumnSpan="2">
+                                <Grid x:Name="ChannelColumnHost" />
+                            </Border>
+
+                            <Border Background="#FF1C5CD2" BorderBrush="#FF0B2B45" BorderThickness="1" Grid.Column="1" Margin="30,0,-15,-1">
+                                <ScrollViewer x:Name="TimeScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="-1,0,-10,0">
+                                    <Grid x:Name="TimeGridHost" />
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Button x:Name="BtnHome" Content="HOME" Grid.RowSpan="99" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Padding="10,6" Margin="10" Background="#FF216DD2" Foreground="White" FontWeight="Bold" BorderBrush="#FFFFD700" />
+    </Grid>
+</Window>

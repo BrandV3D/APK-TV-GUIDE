@@ -10,7 +10,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Icon_Guide.ico" />
+    <None Remove="TVMovieChannelGUIDE_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icon_Guide.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReadMe.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LinkToRoot.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Instructions.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -36,5 +51,31 @@
     <PackageReference Include="LibVLCSharp.WPF" Version="3.6.0" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.18" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="TVMovieChannelGUIDE_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Update="C:\Users\b4vol\source\repos\Versions\TvGuide_v002.xaml" Link="TvGuide_v002.xaml" />
+  </ItemGroup>
+
+  <!-- Every publish, scaffold an empty "TV GUIDE\Channel 1..15\Schedual" folder tree
+       next to the published exe, ready for movies to be dropped in. -->
+  <Target Name="CreateTvGuidePublishFolders" AfterTargets="Publish">
+    <ItemGroup>
+      <TvGuideChannelNumber Include="1;2;3;4;5;6;7;8;9;10;11;12;13;14;15" />
+    </ItemGroup>
+    <PropertyGroup>
+      <TvGuidePublishRoot>$(PublishDir)TV GUIDE\</TvGuidePublishRoot>
+    </PropertyGroup>
+    <ItemGroup>
+      <TvGuideChannelFolder Include="@(TvGuideChannelNumber->'$(TvGuidePublishRoot)Channel %(Identity)')" />
+      <TvGuideScheduleFolder Include="@(TvGuideChannelNumber->'$(TvGuidePublishRoot)Channel %(Identity)\Schedual')" />
+    </ItemGroup>
+    <MakeDir Directories="$(TvGuidePublishRoot)" />
+    <MakeDir Directories="@(TvGuideChannelFolder)" />
+    <MakeDir Directories="@(TvGuideScheduleFolder)" />
+  </Target>
 
 </Project>

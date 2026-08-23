@@ -5,7 +5,7 @@ Public Class ProgramItem
     Public Property EndTime As DateTime
     Public Property FilePath As String
     Public Property FileName As String
-    Public Property ThumbnailPath As String
+    Public Property IsFiller As Boolean
 
     Public ReadOnly Property Duration As TimeSpan
         Get

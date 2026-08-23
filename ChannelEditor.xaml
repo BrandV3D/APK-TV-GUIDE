@@ -1,7 +1,7 @@
 <Window x:Class="ChannelEditor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Channel Editor" Height="450" Width="800" WindowStartupLocation="CenterOwner" Background="{StaticResource InnerBackground}">
+        Title="Channel Editor" Height="450" Width="800" WindowStartupLocation="CenterOwner" WindowState="Maximized" Background="{StaticResource InnerBackground}">
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220" />
@@ -17,7 +17,8 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+        <ScrollViewer Grid.Column="1" Margin="12,0,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
             <TextBlock Text="Channel Name" Foreground="White" />
             <TextBox x:Name="TxtChannelName" />
 
@@ -61,5 +62,9 @@
                 <Button x:Name="BtnCloseEditor" Content="Close" Padding="10,6" />
             </StackPanel>
         </StackPanel>
+        </ScrollViewer>
+
+        <Button x:Name="BtnHome" Content="HOME" Grid.RowSpan="99" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Padding="10,6" Margin="10" Background="#FF223344" Foreground="White" FontWeight="Bold" />
     </Grid>
 </Window>
