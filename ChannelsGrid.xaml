@@ -1,0 +1,8 @@
+<Window x:Class="ChannelsGrid"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="All Channels" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="{StaticResource InnerBackground}">
+    <ScrollViewer>
+        <WrapPanel x:Name="WrapChannels" Margin="20" />
+    </ScrollViewer>
+</Window>

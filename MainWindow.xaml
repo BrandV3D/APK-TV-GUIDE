@@ -6,8 +6,56 @@
         xmlns:local="clr-namespace:TVMoviesChannelGuide"
         xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
+        Background="#FF1E90FF"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="8">
+    <Window.Resources>
+        <SolidColorBrush x:Key="LightHighlight" Color="#FF5DA9FF" />
+        <Style x:Key="ChannelItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{x:Null}" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource LightHighlight}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <SolidColorBrush x:Key="WindowBackground" Color="#FF001B2F" />
+        <SolidColorBrush x:Key="InnerBackground" Color="#FF03263C" />
+        <SolidColorBrush x:Key="TextOnDark" Color="White" />
+        <SolidColorBrush x:Key="ElementBorder" Color="#FF0B2B45" />
+        <SolidColorBrush x:Key="TimelineBlockBrush" Color="#FF123B5A" />
+        <SolidColorBrush x:Key="ProgressBackground" Color="#FF021426" />
+        <!-- Force white foreground for common text elements -->
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="ListView">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="ListViewItem">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="RootGrid" Margin="8" Background="{StaticResource InnerBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220" />
             <ColumnDefinition Width="*" />
@@ -18,44 +66,151 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Margin="0,0,0,8">
-            <Button x:Name="BtnSelectFolder" Content="Select Root Folder" Padding="8,4" Margin="0,0,8,0" />
-            <TextBlock x:Name="TxtRootPath" VerticalAlignment="Center" Text="(no folder selected)" />
-        </StackPanel>
+        <Grid Grid.ColumnSpan="3" Margin="0,0,0,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <ListBox x:Name="LstChannels" Grid.Row="1" Grid.Column="0" DisplayMemberPath="Name" />
+            <Menu Grid.Row="0" Grid.ColumnSpan="3">
+                <MenuItem Header="Menu">
+                    <MenuItem Header="Home" x:Name="MenuHome" />
+                    <MenuItem Header="Channels Grid" x:Name="MenuChannelsGrid" />
+                    <MenuItem Header="Edit Channels" x:Name="MenuEditChannels" />
+                    <MenuItem Header="Guide" x:Name="MenuGuide" />
+                </MenuItem>
+            </Menu>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                <Button x:Name="BtnSelectFolder" Content="Select Root Folder" Padding="8,4" Margin="0,0,8,0" />
+                <Button x:Name="BtnEditChannels" Content="Edit Channels" Padding="8,4" Margin="0,0,8,0" />
+            </StackPanel>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="TV GUIDE" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="White" Margin="12,0" />
+            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+                <Button x:Name="BtnMaximize" Content="Maximize" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="6" Margin="0,0,8,0" />
+                <TextBlock x:Name="TxtRootPath" VerticalAlignment="Center" Text="(no folder selected)" Foreground="{StaticResource TextOnDark}" />
+            </StackPanel>
+        </Grid>
+        <!-- Top time ruler / menu showing half-hour ticks across X hours -->
+        <Border Grid.Row="0" Grid.Column="1" Background="{StaticResource InnerBackground}" Padding="6" Margin="0,48,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnRulerLeft" Content="◀" Padding="6" Margin="0,0,6,0" />
+                <Button x:Name="BtnRulerRight" Content="▶" Padding="6" Margin="0,0,6,0" />
+                <ToggleButton x:Name="BtnRuler24Toggle" Content="24H" Padding="6" Margin="0,0,6,0" />
+                <ScrollViewer x:Name="TimeRulerScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl x:Name="TimeRuler" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
+                        <ItemsControl.RenderTransform>
+                            <TranslateTransform x:Name="TimeRulerTranslate" />
+                        </ItemsControl.RenderTransform>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="8" Margin="2" Background="{Binding Background}" MouseLeftButtonUp="TimeRulerItem_Click" Width="{Binding ElementName=TimeLabel, Path=Width}">
+                                <TextBlock Text="{Binding Text}" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+        </Border>
+
+        <ListBox x:Name="LstChannels" Grid.Row="1" Grid.Column="0" Background="{StaticResource InnerBackground}" Foreground="{StaticResource TextOnDark}" ItemContainerStyle="{StaticResource ChannelItemStyle}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="4">
+                        <Image Width="48" Height="32" Source="{Binding LogoPath}" Margin="0,0,6,0" />
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <DockPanel Grid.Row="1" Grid.Column="1">
-            <ListView x:Name="LstPrograms" DockPanel.Dock="Top" Height="300">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Start" DisplayMemberBinding="{Binding Start}" Width="140" />
-                        <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="300" />
-                        <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}" Width="100" />
-                    </GridView>
-                </ListView.View>
+            <ListView x:Name="LstPrograms" DockPanel.Dock="Top" Height="300" Background="{StaticResource InnerBackground}" Foreground="{StaticResource TextOnDark}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="220" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Width="120" Height="68" Source="{Binding ThumbnailPath}" Stretch="UniformToFill" />
+                            <TextBlock Grid.Column="1" Text="{Binding FileName}" VerticalAlignment="Center" Margin="6,4" />
+                            <TextBlock Grid.Column="2" Text="{Binding Title}" VerticalAlignment="Center" Margin="6,4" />
+                            <TextBlock Grid.Column="3" Text="{Binding Duration}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
-
-            <Border DockPanel.Dock="Bottom" BorderBrush="LightGray" BorderThickness="1" Padding="6" Margin="0,6,0,0">
+            <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource ElementBorder}" BorderThickness="1" Padding="6" Margin="0,6,0,0" Background="{StaticResource InnerBackground}">
                 <StackPanel>
                     <TextBlock Text="Program Details" FontWeight="Bold" />
-                    <TextBlock x:Name="TxtProgramDetails" Text="(select a program)" TextWrapping="Wrap" />
+                    <TextBlock x:Name="TxtProgramDetails" Text="(select a program)" TextWrapping="Wrap" Foreground="{StaticResource TextOnDark}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Timeline area -->
+            <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource ElementBorder}" BorderThickness="1" Padding="6" Margin="0,6,0,0" Background="{StaticResource InnerBackground}">
+                <StackPanel>
+                    <TextBlock Text="Timeline" FontWeight="Bold" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="80">
+                        <ItemsControl x:Name="TimelinePanel" HorizontalAlignment="Left">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                    <Border Background="{StaticResource TimelineBlockBrush}" Margin="2" Padding="4" Width="{Binding Width}" ToolTip="{Binding ToolTip}" MouseLeftButtonUp="ProgramBlock_Click">
+                                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource TextOnDark}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </StackPanel>
             </Border>
         </DockPanel>
 
-        <Border Grid.Row="1" Grid.Column="2" BorderBrush="Gray" BorderThickness="1" Padding="4">
+        <!-- Indexing progress -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
+            <ProgressBar x:Name="IndexProgress" Width="200" Height="16" Minimum="0" Maximum="100" Margin="6,0,6,0" Background="{StaticResource ProgressBackground}" Foreground="{StaticResource TimelineBlockBrush}" />
+            <TextBlock x:Name="TxtIndexStatus" VerticalAlignment="Center" Text="Idle" Foreground="{StaticResource TextOnDark}" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Grid.Column="2" BorderBrush="{StaticResource ElementBorder}" BorderThickness="1" Padding="4" Background="{StaticResource InnerBackground}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!-- LibVLC VideoView -->
-                <vlc:VideoView x:Name="VideoView" Grid.Row="0" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="ImgChannelLogoLarge" Grid.Column="0" Width="120" Height="80" Margin="4" />
+                    <vlc:VideoView x:Name="VideoView" Grid.Column="1" Background="{StaticResource WindowBackground}" />
+                </Grid>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="0,6,0,0">
-                    <Button x:Name="BtnPlay" Content="Play" Padding="8,4" Margin="4" />
-                    <Button x:Name="BtnPause" Content="Pause" Padding="8,4" Margin="4" />
-                    <Button x:Name="BtnStop" Content="Stop" Padding="8,4" Margin="4" />
+                    <Button x:Name="BtnPlay" Content="Play" Padding="8,4" Margin="4" Background="#FF223344" BorderBrush="{StaticResource ElementBorder}" Foreground="{StaticResource TextOnDark}" />
+                    <Button x:Name="BtnPause" Content="Pause" Padding="8,4" Margin="4" Background="#FF223344" BorderBrush="{StaticResource ElementBorder}" Foreground="{StaticResource TextOnDark}" />
+                    <Button x:Name="BtnStop" Content="Stop" Padding="8,4" Margin="4" Background="#FF223344" BorderBrush="{StaticResource ElementBorder}" Foreground="{StaticResource TextOnDark}" />
+                    <Button x:Name="BtnOpenExternalVlc" Content="Open in VLC" Padding="8,4" Margin="4" Background="#FF223344" BorderBrush="{StaticResource ElementBorder}" Foreground="{StaticResource TextOnDark}" />
                 </StackPanel>
             </Grid>
         </Border>

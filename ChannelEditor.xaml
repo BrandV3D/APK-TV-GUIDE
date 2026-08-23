@@ -1,0 +1,65 @@
+<Window x:Class="ChannelEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Channel Editor" Height="450" Width="800" WindowStartupLocation="CenterOwner" Background="{StaticResource InnerBackground}">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Channels" FontWeight="Bold" Margin="0,0,0,8" Foreground="White" />
+            <ListBox x:Name="LstEditorChannels" DisplayMemberPath="Name" Height="300" />
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <Button x:Name="BtnAddChannel" Content="Add" Padding="8,4" Margin="0,0,8,0" />
+                <Button x:Name="BtnRemoveChannel" Content="Remove" Padding="8,4" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="12,0,0,0">
+            <TextBlock Text="Channel Name" Foreground="White" />
+            <TextBox x:Name="TxtChannelName" />
+
+            <TextBlock Text="Logo (optional)" Margin="0,8,0,0" Foreground="White" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="TxtLogoPath" Width="360" />
+                <Button x:Name="BtnBrowseLogo" Content="Browse" Margin="6,0,0,0" Padding="6,2" />
+            </StackPanel>
+            <Image x:Name="ImgPreviewLogo" Width="80" Height="80" Margin="0,6,0,0" />
+
+            <TextBlock Text="Folder (optional)" Margin="0,8,0,0" Foreground="White" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="TxtChannelFolder" Width="360" />
+                <Button x:Name="BtnBrowseFolder" Content="Browse" Margin="6,0,0,0" Padding="6,2" />
+                <Button x:Name="BtnLoadFolderFiles" Content="Load MP4s" Margin="6,0,0,0" Padding="6,2" />
+            </StackPanel>
+            <TextBlock Text="Available MP4 files in folder" Margin="0,8,0,0" Foreground="White" />
+            <ListBox x:Name="LstAvailableFiles" Height="120" SelectionMode="Multiple">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding DisplayPath}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock Text="Files (optional, ordered)" Margin="0,8,0,0" Foreground="White" />
+            <DockPanel>
+                <ListBox x:Name="LstFiles" Height="150" DockPanel.Dock="Left" Width="520" AllowDrop="True" PreviewMouseLeftButtonDown="LstFiles_PreviewMouseLeftButtonDown" MouseMove="LstFiles_MouseMove" Drop="LstFiles_Drop" />
+                <StackPanel Orientation="Vertical" Margin="6,0,0,0">
+                    <Button x:Name="BtnAddFiles" Content="Add Files" Padding="8,4" Margin="0,0,0,6" />
+                    <Button x:Name="BtnRemoveFile" Content="Remove File" Padding="8,4" Margin="0,0,0,6" />
+                    <Button x:Name="BtnMoveUp" Content="Move Up" Padding="8,4" Margin="0,0,0,6" />
+                    <Button x:Name="BtnMoveDown" Content="Move Down" Padding="8,4" />
+                </StackPanel>
+            </DockPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+                <Button x:Name="BtnSaveChannels" Content="Save" Padding="10,6" Margin="0,0,8,0" />
+                <Button x:Name="BtnCloseEditor" Content="Close" Padding="10,6" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
