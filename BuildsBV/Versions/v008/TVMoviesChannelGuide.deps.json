@@ -1,0 +1,59 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "TVMoviesChannelGuide/1.0.0": {
+        "dependencies": {
+          "LibVLCSharp.WPF": "3.6.0"
+        },
+        "runtime": {
+          "TVMoviesChannelGuide.dll": {}
+        }
+      },
+      "LibVLCSharp/3.6.0": {
+        "runtime": {
+          "lib/netstandard2.1/LibVLCSharp.dll": {
+            "assemblyVersion": "3.6.0.0",
+            "fileVersion": "3.6.0.0"
+          }
+        }
+      },
+      "LibVLCSharp.WPF/3.6.0": {
+        "dependencies": {
+          "LibVLCSharp": "3.6.0"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/LibVLCSharp.WPF.dll": {
+            "assemblyVersion": "3.6.0.0",
+            "fileVersion": "3.6.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TVMoviesChannelGuide/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LibVLCSharp/3.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-euY0IFkDbSrz6Sd7+W7moG9uRQhPUJUcE+dhwTtIj6KTD1yTF5TWLWoa9x3sjcw0bAWhZ8BCCi2nfrdDA2Tiqg==",
+      "path": "libvlcsharp/3.6.0",
+      "hashPath": "libvlcsharp.3.6.0.nupkg.sha512"
+    },
+    "LibVLCSharp.WPF/3.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cOr2Yj9iw3WeJjj9XzpOLbA325hvFnuzLSiIroFpJaULu+6XxneeAUNw8dBy+f2q7HnM+2VV7oGHT42hJ6LqUw==",
+      "path": "libvlcsharp.wpf/3.6.0",
+      "hashPath": "libvlcsharp.wpf.3.6.0.nupkg.sha512"
+    }
+  }
+}
