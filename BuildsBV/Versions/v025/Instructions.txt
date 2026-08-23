@@ -1,0 +1,18 @@
+TV Movies Channel Guide - Setup Instructions
+=============================================
+
+1. Replace the empty "TV GUIDE" folder next to this app with your own
+   "TV GUIDE" folder on your hard drive (or copy your movies into this one).
+
+2. Put your videos inside the numbered Channel folders (Channel 1, Channel 2,
+   etc.) - one channel's movies per folder.
+
+3. For each channel's Schedual folder, drop the .mp4 files you want that
+   channel to air. The app reads files from both the channel folder itself
+   and its Schedual subfolder, and schedules them into a repeating 24-hour
+   daily lineup, shuffled randomly.
+
+4. Edit LinkToRoot.txt so it contains the full path to your TV GUIDE folder's
+   root, e.g. J:\FandangoMovies\Movies\TVGUIDE
+
+That's it - launch the app and it will scan that folder and build the guide.
